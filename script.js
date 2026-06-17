@@ -159,10 +159,34 @@ With love and warm wishes,
     },
     {
       id:           10,
-      name:         'Friend Name 10',
+      name:         'Ayyash',
       photo:        'assets/images/friends/friend10.jpg',
       togetherPhoto: null,
       music:        'assets/music/friends/friend10.mp3',
+      message:      'Happy birthday to someone who feels like home. Sixteen years of you in this world has made it so much better — I can\'t wait to see what this year brings you.',
+    },
+    {
+      id:           11,
+      name:         'ANINN',
+      photo:        'assets/images/friends/friend11.jpg',
+      togetherPhoto: null,
+      music:        'assets/music/friends/friend11.mp3',
+      message:      'Happy birthday to someone who feels like home. Sixteen years of you in this world has made it so much better — I can\'t wait to see what this year brings you.',
+    },
+    {
+      id:           12,
+      name:         'ZAKII',
+      photo:        'assets/images/friends/friend12.jpg',
+      togetherPhoto: null,
+      music:        'assets/music/friends/friend12.mp3',
+      message:      'Happy birthday to someone who feels like home. Sixteen years of you in this world has made it so much better — I can\'t wait to see what this year brings you.',
+    },
+    {
+      id:           13,
+      name:         'NAZZKUY',
+      photo:        'assets/images/friends/friend13.jpg',
+      togetherPhoto: null,
+      music:        'assets/music/friends/friend13.mp3',
       message:      'Happy birthday to someone who feels like home. Sixteen years of you in this world has made it so much better — I can\'t wait to see what this year brings you.',
     },
   ],
@@ -1292,7 +1316,7 @@ function attachStaticLightboxTriggers() {
     finalPhoto.style.cursor = 'zoom-in';
     finalPhoto.addEventListener('click', (e) => {
       e.stopPropagation();
-      openLightbox(finalPhoto.src, 'A favourite memory');
+      openLightbox(finalPhoto.src, 'MAMASS RADITHH');
     });
   }
 }
