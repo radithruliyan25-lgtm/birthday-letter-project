@@ -889,3 +889,237 @@ section {
   .friends-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
   .memory-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
 }
+/* ============================================================
+   PHOTO LIGHTBOX SYSTEM
+   Tambahkan ke bagian akhir style.css
+   ============================================================ */
+
+/* ---- Lightbox Overlay ---- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-dream), visibility 0.35s;
+  background: rgba(30, 22, 34, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.lightbox.is-active {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ---- Lightbox Stage ---- */
+.lightbox__stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: min(90vw, 880px);
+  max-height: 92vh;
+  padding: 8px;
+}
+
+/* ---- Image Wrapper ---- */
+.lightbox__img-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+  box-shadow: 0 40px 90px -20px rgba(0,0,0,0.7);
+  transform: scale(0.88);
+  transition: transform 0.45s var(--ease-dream);
+}
+
+.lightbox.is-active .lightbox__img-wrap {
+  transform: scale(1);
+}
+
+.lightbox__img {
+  display: block;
+  max-width: min(88vw, 860px);
+  max-height: 78vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: opacity 0.25s ease;
+}
+
+.lightbox__img.is-loading {
+  opacity: 0;
+}
+
+/* ---- Caption ---- */
+.lightbox__caption {
+  font-family: var(--font-script);
+  font-size: 18px;
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  letter-spacing: 0.02em;
+  min-height: 26px;
+  transition: opacity 0.3s ease;
+}
+
+/* ---- Controls ---- */
+.lightbox__close {
+  position: fixed;
+  top: 18px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.9);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s;
+  z-index: 10;
+}
+.lightbox__close:hover {
+  background: rgba(255,255,255,0.22);
+  transform: scale(1.08);
+}
+
+/* Prev / Next arrows (Memory Wall gallery only) */
+.lightbox__nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.9);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.28s var(--ease-dream), opacity 0.25s;
+  z-index: 10;
+}
+.lightbox__nav:hover {
+  background: rgba(255,255,255,0.22);
+}
+.lightbox__nav--prev { left: 16px; }
+.lightbox__nav--next { right: 16px; }
+
+.lightbox__nav.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Dots indicator for gallery */
+.lightbox__dots {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+}
+
+.lightbox__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transition: background 0.3s, transform 0.3s;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.lightbox__dot.is-active {
+  background: rgba(255,255,255,0.9);
+  transform: scale(1.25);
+}
+
+/* ---- Clickable photo cursor ---- */
+.lightbox-trigger {
+  cursor: zoom-in;
+  transition: transform 0.3s var(--ease-dream), filter 0.3s var(--ease-dream);
+}
+.lightbox-trigger:hover {
+  transform: scale(1.03);
+  filter: brightness(1.06);
+}
+
+/* Memory tiles already handle hover scale via .memory-tile:hover img,
+   so we just ensure the cursor changes */
+.memory-tile { cursor: zoom-in; }
+
+/* Round hero photo override — keep its circular shape */
+.photo-reveal__img.lightbox-trigger:hover {
+  transform: scale(1.04);
+  filter: brightness(1.06);
+}
+
+/* ---- Swipe hint (mobile) ---- */
+.lightbox__swipe-hint {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  animation: hint-fade 2.8s ease-in-out 0.8s forwards;
+  white-space: nowrap;
+}
+@keyframes hint-fade {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  20%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---- Slide transition (gallery navigation) ---- */
+.lightbox__img.slide-out-left  { animation: slide-out-l 0.22s ease-in forwards; }
+.lightbox__img.slide-out-right { animation: slide-out-r 0.22s ease-in forwards; }
+.lightbox__img.slide-in-left   { animation: slide-in-l  0.26s var(--ease-dream) forwards; }
+.lightbox__img.slide-in-right  { animation: slide-in-r  0.26s var(--ease-dream) forwards; }
+
+@keyframes slide-out-l  { to { opacity: 0; transform: translateX(-28px); } }
+@keyframes slide-out-r  { to { opacity: 0; transform: translateX(28px);  } }
+@keyframes slide-in-l   { from { opacity: 0; transform: translateX(28px);  } to { opacity: 1; transform: translateX(0); } }
+@keyframes slide-in-r   { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
+
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  .lightbox__nav--prev { left: 6px; }
+  .lightbox__nav--next { right: 6px; }
+  .lightbox__nav { width: 40px; height: 40px; font-size: 18px; }
+
+  .lightbox__img {
+    max-width: 96vw;
+    max-height: 72vh;
+    border-radius: var(--radius-sm);
+  }
+
+  .lightbox__close {
+    top: 12px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* Prevent double bounce when body already has modal-open class */
+body.lightbox-open { overflow: hidden; }

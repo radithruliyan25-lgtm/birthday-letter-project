@@ -51,15 +51,28 @@ const CONFIG = {
      Paragraf dipisah dengan baris kosong.
   ---------------------------------------------------------- */
   letters: {
-    main: `On the day you turned sixteen, I wanted you to have something that felt like more than just a message — a little world made just for you.
+    main: `Happy Sweet Sixteen. 🎉
 
-Sixteen years ago, you arrived and quietly made everyone around you a little softer, a little happier. Since then you've grown into someone warm, funny, a little bit chaotic in the best way, and endlessly kind to the people lucky enough to know you.
+Before anything else, I just want to say thank you for being here and for being yourself.
 
-This page is a small keepsake of that — a letter, some secrets from the people who love you, and one more thing waiting at the very end. Take your time. Open each envelope slowly.
+Today is your sixteenth birthday, and honestly, I wanted this to be more than just a simple "happy birthday" message. That's why this little website exists. It's a small place filled with memories, wishes, and a few surprises made especially for you.
 
-You deserve every bit of this day, and every birthday after it.
+Sixteen years ago, the world became a little brighter because you arrived in it. Since then, you've grown into someone who brings warmth, laughter, and comfort to the people around you, often without even realizing it.
 
-With all my love, today and always.`,
+I hope this year gives you many reasons to smile. I hope you find the courage to chase the things you dream about, the strength to overcome difficult days, and the happiness you truly deserve.
+
+As you go through this page, take your time. Open every letter, read every message, and enjoy every little memory waiting for you. Each one comes from people who care about you and are grateful to have you in their lives.
+
+Today is your day.
+
+So laugh a little louder, smile a little longer, and make another beautiful memory to add to the story you're still writing.
+
+Happy 16th Birthday, Derly.
+
+With love and warm wishes,
+
+-Someone who cares about you
+`,
   },
 
   /* ----------------------------------------------------------
@@ -202,7 +215,7 @@ I'm so endlessly proud of you. Always in your corner.`,
     { year: '2016', text: 'A cheerful little adventurer.' },
     { year: '2020', text: 'Creating memories and friendships.' },
     { year: '2023', text: 'Growing stronger and wiser.' },
-    { year: '2026', text: 'Sweet Sixteen surrounded by memories, friendship, and endless possibilities aheadcarrying every laugh, memory, and dream along the way .' },
+    { year: '2026', text: 'Sweet Sixteen surrounded by memories, friendship, and endless possibilities ahead carrying every laugh, memory, and dream along the way becoming the wonderful person everyone loves today .' },
   ],
 
 };
@@ -282,7 +295,7 @@ function init() {
   startPerformanceMonitor();
   applyConfigToDOM();
   renderFriendCards();
-  renderMemoryWall();
+  renderMemoryWall();   // ← pasang lightbox trigger di dalam fungsi ini
   renderTimeline();
   restoreProgressUI();
   setupRevealObserver();
@@ -290,28 +303,23 @@ function init() {
   setupMusicPlayerUI();
   setupEventListeners();
   runLoadingSequence();
+  attachStaticLightboxTriggers(); // ← hanya hero photo + final photo (statis)
 }
 
 /* ------------------------------------------------------------------
    applyConfigToDOM
-   Satu-satunya tempat CONFIG ditulis ke DOM.
-   Jika ada field baru di CONFIG, tambahkan di sini.
 ------------------------------------------------------------------ */
 function applyConfigToDOM() {
-  // Surat utama
   mainLetterTextEl.dataset.fullText = CONFIG.letters.main;
 
-  // Foto utama (bulat di hero)
   const derlyPhoto = $('#derly-photo');
   derlyPhoto.src = CONFIG.photos.main;
   attachImageFallback(derlyPhoto, 'derly.jpg');
 
-  // Surat terakhir — foto & teks
   finalPhotoEl.src = CONFIG.finalLetter.photo;
   attachImageFallback(finalPhotoEl, CONFIG.finalLetter.photo.split('/').pop());
   finalLetterTextEl.dataset.fullText = CONFIG.finalLetter.message;
 
-  // Info orang (nama, tanggal lahir, tanggal ulang tahun)
   const nameEls   = $all('.birthday-title__name');
   const datesEl   = $('.birthday-title__dates');
   const heroName  = $('.hero__name');
@@ -706,6 +714,9 @@ function openFriendModal(index) {
     modalFriendText.dataset.fullText     = friend.message;
     typewrite(modalFriendText, friend.message);
     markFriendOpened(index);
+
+    // Pasang lightbox pada foto yang baru dimuat ke dalam modal
+    attachFriendModalPhotoTriggers();
   }, 1300));
 }
 
@@ -716,6 +727,9 @@ function closeFriendModal() {
   friendModal.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('modal-open');
   resetFriendModalVisuals();
+  // Reset lbAttached agar bisa dipasang ulang saat modal dibuka berikutnya
+  if (modalFriendPhoto)   delete modalFriendPhoto.dataset.lbAttached;
+  if (modalTogetherPhoto) delete modalTogetherPhoto.dataset.lbAttached;
   fadeOut(audioFriend).then(() => { if (state.hasOpenedLetter) playMain(); });
 }
 
@@ -767,9 +781,17 @@ function closeFinalModal() {
 }
 
 /* ================================================================
-   MEMORY WALL — dibuat otomatis dari CONFIG.memoryPhotos
+   MEMORY WALL
+   FIX: lightbox trigger dipasang langsung saat setiap tile dibuat,
+   sehingga tidak ada race condition dengan waktu rendering DOM.
    ================================================================ */
 function renderMemoryWall() {
+  // Bangun gallery array sekali untuk dipakai semua tile
+  const memoryGallery = CONFIG.memoryPhotos.map((item) => ({
+    src:     item.image,
+    caption: item.caption || '',
+  }));
+
   CONFIG.memoryPhotos.forEach((item, i) => {
     const tile       = document.createElement('div');
     tile.className   = 'memory-tile reveal';
@@ -782,7 +804,19 @@ function renderMemoryWall() {
 
     tile.appendChild(img);
 
-    // Caption opsional — ditampilkan sebagai tooltip via title
+    // ── FIX: pasang listener di tile (bukan img) agar ::after
+    //    pseudo-element tidak memblokir klik ──────────────────────
+    tile.style.cursor = 'zoom-in';
+    tile.addEventListener('click', () => {
+      openLightbox(
+        memoryGallery[i].src,
+        memoryGallery[i].caption,
+        memoryGallery,
+        i
+      );
+    });
+    // ─────────────────────────────────────────────────────────────
+
     if (item.caption) tile.title = item.caption;
 
     memoryGrid.appendChild(tile);
@@ -849,7 +883,6 @@ function fadeOut(audioEl, duration = 900) {
   });
 }
 
-/* Semua detail musik dibaca dari CONFIG */
 function playMain() {
   if (audioMain.getAttribute('src') !== CONFIG.mainMusic.file) {
     audioMain.src = CONFIG.mainMusic.file;
@@ -928,4 +961,293 @@ function setupMusicPlayerUI() {
     audio.addEventListener('play',  () => { musicPlayPause.textContent = '⏸'; });
     audio.addEventListener('pause', () => { musicPlayPause.textContent = '▶'; });
   });
+}
+
+/* ================================================================
+   PHOTO LIGHTBOX SYSTEM
+   ================================================================ */
+
+/* ================================================================
+   LIGHTBOX STATE
+   ================================================================ */
+const lbState = {
+  gallery:      [],
+  currentIndex: 0,
+  touchStartX:  null,
+  touchStartY:  null,
+  isAnimating:  false,
+};
+
+/* ================================================================
+   BUILD LIGHTBOX DOM (injected once on first call)
+   ================================================================ */
+let lightboxEl  = null;
+let lbImgEl     = null;
+let lbCapEl     = null;
+let lbPrevBtn   = null;
+let lbNextBtn   = null;
+let lbDotsEl    = null;
+let lbSwipeHint = null;
+
+function buildLightboxDOM() {
+  if (lightboxEl) return;
+
+  lightboxEl = document.createElement('div');
+  lightboxEl.id        = 'photo-lightbox';
+  lightboxEl.className = 'lightbox';
+  lightboxEl.setAttribute('aria-modal', 'true');
+  lightboxEl.setAttribute('role', 'dialog');
+  lightboxEl.setAttribute('aria-label', 'Photo viewer');
+  lightboxEl.innerHTML = `
+    <button class="lightbox__close" id="lb-close" aria-label="Close photo viewer">✕</button>
+    <button class="lightbox__nav lightbox__nav--prev is-hidden" id="lb-prev" aria-label="Previous photo">&#8592;</button>
+    <button class="lightbox__nav lightbox__nav--next is-hidden" id="lb-next" aria-label="Next photo">&#8594;</button>
+    <div class="lightbox__stage">
+      <div class="lightbox__img-wrap">
+        <img class="lightbox__img" id="lb-img" src="" alt="" draggable="false" />
+      </div>
+      <p class="lightbox__caption" id="lb-caption"></p>
+      <div class="lightbox__dots" id="lb-dots"></div>
+    </div>
+    <span class="lightbox__swipe-hint" id="lb-swipe-hint" aria-hidden="true">swipe to browse</span>
+  `;
+
+  document.body.appendChild(lightboxEl);
+
+  lbImgEl     = lightboxEl.querySelector('#lb-img');
+  lbCapEl     = lightboxEl.querySelector('#lb-caption');
+  lbPrevBtn   = lightboxEl.querySelector('#lb-prev');
+  lbNextBtn   = lightboxEl.querySelector('#lb-next');
+  lbDotsEl    = lightboxEl.querySelector('#lb-dots');
+  lbSwipeHint = lightboxEl.querySelector('#lb-swipe-hint');
+
+  lightboxEl.addEventListener('click', (e) => {
+    if (e.target === lightboxEl) closeLightbox();
+  });
+
+  lightboxEl.querySelector('#lb-close').addEventListener('click', closeLightbox);
+  lbPrevBtn.addEventListener('click', () => navigateLightbox(-1));
+  lbNextBtn.addEventListener('click', () => navigateLightbox(1));
+
+  lightboxEl.addEventListener('touchstart', (e) => {
+    lbState.touchStartX = e.changedTouches[0].screenX;
+    lbState.touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  lightboxEl.addEventListener('touchend', (e) => {
+    if (lbState.touchStartX === null) return;
+    const dx = e.changedTouches[0].screenX - lbState.touchStartX;
+    const dy = e.changedTouches[0].screenY - lbState.touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      navigateLightbox(dx < 0 ? 1 : -1);
+    }
+    lbState.touchStartX = null;
+    lbState.touchStartY = null;
+  }, { passive: true });
+
+  document.addEventListener('keydown', handleLightboxKey);
+}
+
+function handleLightboxKey(e) {
+  if (!lightboxEl || !lightboxEl.classList.contains('is-active')) return;
+  if (e.key === 'Escape')     { closeLightbox(); return; }
+  if (e.key === 'ArrowLeft')  navigateLightbox(-1);
+  if (e.key === 'ArrowRight') navigateLightbox(1);
+}
+
+/* ================================================================
+   OPEN / CLOSE
+   ================================================================ */
+function openLightbox(src, caption = '', galleryItems = [], currentIndex = 0) {
+  buildLightboxDOM();
+
+  lbState.gallery      = galleryItems.length ? galleryItems : [{ src, caption }];
+  lbState.currentIndex = currentIndex;
+  lbState.isAnimating  = false;
+
+  document.body.classList.add('lightbox-open');
+  lightboxEl.classList.add('is-active');
+
+  renderLightboxSlide(src, caption, false);
+  updateNavButtons();
+  buildDots();
+
+  if (lbState.gallery.length > 1 && 'ontouchstart' in window) {
+    lbSwipeHint.style.display = '';
+    lbSwipeHint.style.animation = 'none';
+    void lbSwipeHint.offsetWidth;
+    lbSwipeHint.style.animation = '';
+  } else {
+    lbSwipeHint.style.display = 'none';
+  }
+}
+
+function closeLightbox() {
+  if (!lightboxEl) return;
+  lightboxEl.classList.remove('is-active');
+  document.body.classList.remove('lightbox-open');
+
+  setTimeout(() => {
+    if (lbImgEl) lbImgEl.src = '';
+    if (lbCapEl) lbCapEl.textContent = '';
+    if (lbDotsEl) lbDotsEl.innerHTML = '';
+    lbState.gallery = [];
+  }, 400);
+}
+
+/* ================================================================
+   NAVIGATE (gallery mode)
+   ================================================================ */
+function navigateLightbox(direction) {
+  if (lbState.gallery.length <= 1) return;
+  if (lbState.isAnimating) return;
+
+  const newIndex = lbState.currentIndex + direction;
+  if (newIndex < 0 || newIndex >= lbState.gallery.length) return;
+
+  lbState.isAnimating = true;
+
+  const outClass = direction > 0 ? 'slide-out-left' : 'slide-out-right';
+  lbImgEl.classList.add(outClass);
+
+  setTimeout(() => {
+    lbImgEl.classList.remove(outClass);
+    lbState.currentIndex = newIndex;
+    const item = lbState.gallery[newIndex];
+    renderLightboxSlide(item.src, item.caption, true, direction);
+    updateNavButtons();
+    updateDots();
+    lbState.isAnimating = false;
+  }, 220);
+}
+
+function renderLightboxSlide(src, caption, animate = false, direction = 1) {
+  lbImgEl.classList.add('is-loading');
+  lbCapEl.style.opacity = '0';
+
+  const inClass = animate ? (direction > 0 ? 'slide-in-left' : 'slide-in-right') : '';
+
+  const tempImg = new Image();
+  tempImg.onload = () => {
+    lbImgEl.src = src;
+    lbImgEl.alt = caption || '';
+    lbImgEl.classList.remove('is-loading');
+    if (inClass) {
+      lbImgEl.classList.add(inClass);
+      lbImgEl.addEventListener('animationend', () => lbImgEl.classList.remove(inClass), { once: true });
+    }
+    lbCapEl.textContent   = caption || '';
+    lbCapEl.style.opacity = '1';
+  };
+  tempImg.onerror = () => {
+    lbImgEl.src = src;
+    lbImgEl.classList.remove('is-loading');
+    lbCapEl.textContent   = caption || '';
+    lbCapEl.style.opacity = '1';
+  };
+  tempImg.src = src;
+}
+
+/* ================================================================
+   NAV BUTTONS
+   ================================================================ */
+function updateNavButtons() {
+  const isGallery = lbState.gallery.length > 1;
+  lbPrevBtn.classList.toggle('is-hidden', !isGallery || lbState.currentIndex === 0);
+  lbNextBtn.classList.toggle('is-hidden', !isGallery || lbState.currentIndex === lbState.gallery.length - 1);
+}
+
+/* ================================================================
+   DOTS INDICATOR
+   ================================================================ */
+function buildDots() {
+  lbDotsEl.innerHTML = '';
+  if (lbState.gallery.length <= 1) return;
+
+  const total = Math.min(lbState.gallery.length, 12);
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement('button');
+    dot.className   = `lightbox__dot${i === lbState.currentIndex ? ' is-active' : ''}`;
+    dot.setAttribute('aria-label', `Photo ${i + 1}`);
+    dot.dataset.index = String(i);
+    dot.addEventListener('click', () => {
+      const diff = i - lbState.currentIndex;
+      if (diff !== 0) navigateLightbox(diff > 0 ? 1 : -1);
+    });
+    lbDotsEl.appendChild(dot);
+  }
+}
+
+function updateDots() {
+  const dots = lbDotsEl.querySelectorAll('.lightbox__dot');
+  const idx  = Math.min(lbState.currentIndex, dots.length - 1);
+  dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+}
+
+/* ================================================================
+   STATIC LIGHTBOX TRIGGERS
+   Hanya untuk elemen statis (hero photo + final photo).
+   Memory wall sudah ditangani di renderMemoryWall().
+   Friend modal ditangani di attachFriendModalPhotoTriggers().
+   ================================================================ */
+function attachStaticLightboxTriggers() {
+  // Hero photo (bundar)
+  const derlyPhoto = document.getElementById('derly-photo');
+  if (derlyPhoto) {
+    derlyPhoto.style.cursor = 'zoom-in';
+    derlyPhoto.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLightbox(CONFIG.photos.main, CONFIG.person.name);
+    });
+  }
+
+  // Final letter photo
+  const finalPhoto = document.getElementById('final-photo');
+  if (finalPhoto) {
+    finalPhoto.style.cursor = 'zoom-in';
+    finalPhoto.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLightbox(finalPhoto.src, 'A favourite memory');
+    });
+  }
+}
+
+/* ================================================================
+   FRIEND MODAL PHOTO TRIGGERS
+   Dipanggil di dalam openFriendModal() setelah foto dimuat.
+   ================================================================ */
+function attachFriendModalPhotoTriggers() {
+  const friendPhoto   = document.getElementById('modal-friend-photo');
+  const togetherPhoto = document.getElementById('modal-together-photo');
+  const friendName    = document.getElementById('modal-friend-name');
+
+  if (friendPhoto && friendPhoto.src && !friendPhoto.dataset.lbAttached) {
+    friendPhoto.dataset.lbAttached = 'true';
+    friendPhoto.style.cursor = 'zoom-in';
+    friendPhoto.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const name  = friendName ? friendName.textContent : '';
+      const items = [{ src: friendPhoto.src, caption: name }];
+      if (togetherPhoto && !document.getElementById('modal-together-wrap').hidden) {
+        items.push({ src: togetherPhoto.src, caption: `${name} & Derly` });
+      }
+      openLightbox(friendPhoto.src, name, items, 0);
+    });
+  }
+
+  if (togetherPhoto && togetherPhoto.src && !togetherPhoto.dataset.lbAttached) {
+    const togetherWrap = document.getElementById('modal-together-wrap');
+    if (togetherWrap && !togetherWrap.hidden) {
+      togetherPhoto.dataset.lbAttached = 'true';
+      togetherPhoto.style.cursor = 'zoom-in';
+      const name = friendName ? friendName.textContent : '';
+      togetherPhoto.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const items = [];
+        if (friendPhoto && friendPhoto.src) items.push({ src: friendPhoto.src, caption: name });
+        items.push({ src: togetherPhoto.src, caption: `${name} & Derly` });
+        openLightbox(togetherPhoto.src, `${name} & Derly`, items, items.length - 1);
+      });
+    }
+  }
 }
