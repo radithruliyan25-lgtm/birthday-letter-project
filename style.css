@@ -611,8 +611,17 @@ section {
 .final-envelope__seal {
   position: absolute; top: 44%; left: 50%; transform: translate(-50%,-50%);
   font-size: 30px; z-index: 3;
+  transition: transform 0.5s var(--ease-dream), opacity 0.5s var(--ease-dream);
 }
 .final-teaser__label { margin-top: 22px; font-weight: 700; color: var(--blue-deep); letter-spacing: 0.04em; }
+
+/* BUG FIX: this opened state existed in markup/structure but had no
+   CSS rule, so the final envelope never visually animated open.
+   Mirrors .envelope.is-open so behaviour matches the hero envelope,
+   and replays every time the class is toggled (open -> close -> open). */
+.final-envelope.is-open .final-envelope__flap { transform: rotateX(180deg); }
+.final-envelope.is-open .final-envelope__seal { opacity: 0; transform: translate(-50%,-50%) scale(0.4) rotate(25deg); }
+.final-envelope.is-open { animation: none; }
 
 /* ============================================================
    MEMORY WALL
@@ -862,6 +871,12 @@ section {
 
 /* ============================================================
    RESPONSIVE
+   ----------------------------------------------------------------
+   This block only adjusts LAYOUT (grid columns, spacing, player
+   position) for small viewports. It intentionally never touches
+   .particle, .burst, or any animation/effect-related rule — effect
+   density is controlled exclusively by the FPS-based quality system
+   in script.js, not by screen width.
    ============================================================ */
 @media (max-width: 640px) {
   section { padding: 64px 18px; }
