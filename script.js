@@ -87,19 +87,19 @@ With love and warm wishes,
   friends: [
     {
       id:           1,
-      name:         'Friend Name 1',
+      name:         'Dea',
       photo:        'assets/images/friends/friend1.jpg',
       togetherPhoto: null,  // atau: 'assets/images/together/together1.jpg'
       music:        'assets/music/friends/friend1.mp3',
-      message:      'Happy sweet sixteen! I still can\'t believe how long we\'ve been friends — here\'s to many more years of inside jokes and late-night calls. I love you so much, Derly.',
+      message:      'p kecot. anjayy udah 16 tahun, seumuran kita yeeee gue sih cuma mau bilang pls TINGKATKAN RASA KEMANUSIAAN LO DAN KURANGIN CUEK NYAAA fakk lah akhir akhir ini gue ngerasa lo cuek bgt sm gue😔 tapi yaudahlah what can i do emang lo begitu kesannya? lo tuh orangnya kayak sebenernya imut lemah lembut (geli bgt bukan gue yg ngetik) tp sedikit keras kepala dan ngeselin..."',
     },
     {
       id:           2,
-      name:         'Friend Name 2',
+      name:         'AZZA',
       photo:        'assets/images/friends/friend2.jpg',
       togetherPhoto: null,
       music:        'assets/music/friends/friend2.mp3',
-      message:      'You have no idea how much brighter everything is with you around. Happy birthday to the kindest person I know — sixteen looks amazing on you already.',
+      message:      'happy birthday lakei, wishing you nothing but happiness, good health, success and all the best things life has to offer, i hope this new age brings you closer to your dreams, surrounds you with genuine people, gives you countless reasons to smile everyday, dan lepas dari genggaman pEg3eR1. its been great knowing u bb imutku, impression ak ke km adalah ure such a fun n adorable person, ure funny, pretty n somehow always manage to people smile :p. being around u feels comfortable n honestlyyy getting to know u has been one of the nicest things (anjay nicest ga tu) dannnnn pesan ak adalah dont be too hard on urself, take things one step at a time, keep believing in urself and NeVerR stop chasing the things that make u hAPpY!!!! :D. even when life gets tough, remember that ure stronger than u think :b, may this year be filled with new opportunities, unforgettable memories and endless blessings. enjoy ur special day, make lots of memories and dont forget to treat urself cz you deserve it!!!!! happiiii birthdayyyiii lakeica',
     },
     {
       id:           3,
