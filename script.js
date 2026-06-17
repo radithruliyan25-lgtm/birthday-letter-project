@@ -143,19 +143,19 @@ With love and warm wishes,
     },
     {
       id:           8,
-      name:         'Friend Name 8',
+      name:         'Rehann',
       photo:        'assets/images/friends/friend8.jpg',
       togetherPhoto: null,
       music:        'assets/music/friends/friend8.mp3',
-      message:      'Happy birthday! You make even the most ordinary days feel a little special. Here\'s to sixteen and everything wonderful it\'s about to bring you.',
+      message:      'Happy Birthday, Derly! 🎂 Semoga sehat selalu, banyak rezeki, makin bahagia, dan semua yang kamu inginkan bisa terwujud. Semoga harimu menyenangkan dan penuh momen indah. 🎉✨',
     },
     {
       id:           9,
-      name:         'Friend Name 9',
+      name:         'Azril',
       photo:        'assets/images/friends/friend9.jpg',
       togetherPhoto: null,
       music:        'assets/music/friends/friend9.mp3',
-      message:      'I\'m so grateful this year gave me you. Happy sweet sixteen — may you laugh as much as you make the rest of us laugh.',
+      message:      'Happy birthday derly my friend, semoga kamu tambah sehat, tambah pinter, tambah cerdas, ga ngelawan ortu, jaga kesehatan juga jangan main wuwa terus menerus, pokoknya tambah baik tinggalkan yang buruk buruk yaa🥳            -azrilgantengpacarmikasadanalya😜',
     },
     {
       id:           10,
@@ -174,15 +174,100 @@ With love and warm wishes,
   finalLetter: {
     photo:   'assets/images/final-photo.jpg',
     music:   'assets/music/final-letter.mp3',
-    message: `If you've made it this far, that means you opened every secret and read every wish — and now it's just the two of us.
+    message: `Hai deyyikk,
 
-Watching you grow into sixteen has been one of my favourite things. I've seen you laugh until you cried, cry until you laughed again, chase ridiculous ideas, and somehow make every room you walk into feel a little warmer.
+Kalau kamu sudah sampai di bagian ini, berarti kamu sudah membuka semua surat, membaca semua ucapan, dan menemukan surat terakhir yang sengaja aku simpan untuk paling akhir.
 
-Sixteen is the beginning of a chapter where you get to decide more and more of who you become — and I already know it's going to be someone wonderful, because you already are.
+Jujur saja, bagian ini adalah bagian yang paling sulit untuk aku tulis ahehehe bukan karena gamau ngucap apapun tapi kayanya kebanyakan yang mau di ucapin...
 
-So happy sweet sixteen, Derly. May this year give you everything your sixteen-year-old heart is hoping for, and a few things you didn't even know to wish for.
+Pertama-tama, selamat ulang tahun yang ke-16.
 
-I'm so endlessly proud of you. Always in your corner.`,
+Aku harap hari ini berjalan dengan baik untukmu. Aku harap kamu banyak tersenyum, banyak tertawa, dan merasakan betapa berartinya dirimu bagi orang-orang di sekitarmu. Enam belas tahun bukan waktu yang sebentar. Sudah banyak hal yang kamu lewati, banyak orang yang datang dan pergi, banyak kenangan yang tercipta, dan banyak pelajaran yang mungkin membentukmu menjadi dirimu yang sekarang.
+
+Di hari ulang tahunmu ini, ada beberapa hal yang ingin aku sampaikan.
+
+Yang pertama tentu saja tidak lain dan tidak bukan adalah maaf.
+
+Maaf kalau selama kita "masih berteman", aku pernah banyak membuat kesalahan. Maaf untuk perkataan yang mungkin menyakitkan, sikap yang mungkin mengecewakan, keputusan yang mungkin membuatmu kesal, dan semua hal yang seharusnya bisa aku lakukan dengan lebih baik.
+
+Aku sadar bahwa selama satu tahun terakhir, aku melakukan banyak hal yang mungkin meninggalkan kesan buruk bagimu. Semakin lama aku melihat ke belakang, semakin banyak hal yang aku sadari seharusnya tidak terjadi. Ada banyak momen yang kalau bisa diulang, mungkin akan aku lakukan dengan cara yang berbeda.
+
+Aku tidak menulis ini untuk mencari pembenaran atau meminta semuanya dilupakan begitu saja sihhh,tapi tapi Aku hanya ingin mengakui bahwa aku memang punya kesalahan, dan aku benar-benar minta maaf untuk itu serius deh.
+
+Kalau boleh jujur, ada satu hal tentangmu yang selalu aku ingat.
+
+Kamu itu orang yang susah dibujuk.
+
+Kalau sudah punya pendapat, biasanya susah berubah. Kalau sudah yakin dengan sesuatu, kamu akan mempertahankannya. Dan kalau sudah marah atau kecewa, kadang butuh waktu yang cukup lama sampai semuanya benar-benar membaik lagi.
+
+Dulu aku sering merasa kesal karena itu.
+
+Tapi semakin lama aku sadar kalau mungkin itu memang bagian dari dirimu. Kamu bukan orang yang mudah mengikuti apa kata orang lain hanya karena mereka memintanya. Kamu punya cara berpikir dan pendirianmu sendiri.
+
+Meskipun kadang membuat orang lain pusing (aku contohnya), aku rasa itu juga salah satu hal yang membuatmu menjadi dirimu sendiri.
+
+Aku juga tidak tahu bagaimana kamu memandangku sekarang sihh sejujurnya.
+
+Mungkin biasa saja.
+
+Mungkin masih kesal.
+
+Mungkin sudah tidak peduli.
+
+Atau mungkin aku hanya seseorang dari masa lalu yang sesekali teringat ketika tidak sengaja muncul di beranda.
+
+Dan jujur saja, aku tidak punya hak untuk menentukan bagaimana kamu harus melihatku.
+
+Karena itu aku hanya ingin bertanya satu hal.
+
+Apakah kita masih bisa berteman?
+
+Kalau jawabannya tidak, tidak apa-apa.
+
+Sungguh kali ini aku tidak akan memaksa.
+
+Aku tidak akan memaksakan apa pun. Aku tidak akan marah. Aku tidak akan menyalahkanmu. Setelah semua yang terjadi, aku mengerti kalau setiap orang berhak menentukan siapa yang ingin mereka pertahankan dalam hidupnya.
+
+Tapi kalau jawabannya iya, aku akan sangat bersyukur.
+
+Bukan karena aku berharap semuanya kembali seperti dulu, melainkan karena aku masih menghargai keberadaanmu sebagai seseorang yang pernah memberi banyak warna dalam hidupku.
+
+Apa pun jawabanmu nanti, ada satu hal yang tidak akan berubah.
+
+Aku tetap ingin yang terbaik untukmu.
+
+Aku berharap kamu berhasil mencapai impian-impianmu.
+
+Aku berharap kamu bertemu orang-orang yang tulus menyayangimu.
+
+Aku berharap kamu selalu diberikan kesehatan, kebahagiaan, dan kekuatan saat menghadapi hari-hari yang sulit.
+
+Aku berharap suatu hari nanti kamu bisa melihat kembali perjalanan hidupmu dan bangga pada semua hal yang sudah berhasil kamu lewati.
+
+Dan mungkin, meskipun tidak selalu berada di dekatmu, aku akan tetap menjadi seseorang yang diam-diam ikut senang melihatmu baik-baik saja.
+
+Melihatmu bahagia.
+
+Melihatmu berhasil.
+
+Melihatmu mencapai hal-hal yang dulu hanya menjadi impian.
+
+Bukan karena aku ingin selalu ada dalam hidupmu, tetapi karena aku memang ingin hal-hal baik terjadi padamu.
+
+Terima kasih sudah menjadi bagian dari cerita yang pernah aku jalani.
+
+Terima kasih untuk semua kenangan, pelajaran, tawa, dan bahkan kesalahan yang membuatku belajar menjadi pribadi yang lebih baik.
+
+Sekali lagi, selamat ulang tahun yang ke-16, Derly.
+
+Semoga tahun ini menjadi awal dari banyak hal baik yang menunggumu di depan.
+
+Jaga dirimu baik-baik.
+
+Dan semoga kamu selalu menemukan alasan untuk tersenyum.
+
+-MAMASS RADITTHEOKKK
+`,
   },
 
   /* ----------------------------------------------------------
