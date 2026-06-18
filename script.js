@@ -11,11 +11,13 @@
    FILE STRUCTURE:
      assets/images/derly.jpg
      assets/images/final-photo.jpg
+     assets/images/surprise.gif                  (easter egg jumpscare)
      assets/images/friends/friend1.jpg  ... friend10.jpg
      assets/images/together/together1.jpg ... together10.jpg  (opsional per friend)
      assets/images/memory/memory1.jpg   ... (sesuai array memoryPhotos)
      assets/music/main-theme.mp3
      assets/music/final-letter.mp3
+     assets/music/surprise.mp3                   (easter egg jumpscare song)
      assets/music/friends/friend1.mp3   ... friend10.mp3
    ================================================================ */
 
@@ -195,7 +197,7 @@ With love and warm wishes,
       photo:        'assets/images/friends/friend14.jpg',
       togetherPhoto: null,
       music:        'assets/music/friends/friend14.mp3',
-      message:      'Happy birthday to someone who feels like home. Sixteen years of you in this world has made it so much better — I can\'t wait to see what this year brings you.',
+      message:      '"Selamat ulang tahun, Derly! Selamat menyambut babak baru kehidupan. Seiring berkurangnya angka waktu kita di dunia, semoga setiap langkah ke depan membawa evolusi diri yang luar biasa. Aku berdoa agar kamu selalu diberi kesehatan yang prima, kebahagiaan, serta pundak yang kokoh dan hati yang tangguh untuk melewati setiap plot twist kehidupan yang ada. Oh iya, kalau selama ini aku ada salah, maafin ya. Nikmati harimu!"',
     },
     {
       id:           14,
@@ -309,7 +311,27 @@ Dan semoga kamu selalu menemukan alasan untuk tersenyum.
 -MAMASS RADITTHEOKKK
 `,
   },
-  
+
+  /* ----------------------------------------------------------
+     EASTER EGG: "ONE LAST THING" SURPRISE
+     ----------------------------------------------------------
+     Muncul otomatis (sebagai tombol kecil mengambang di pojok)
+     beberapa saat setelah final letter ditutup. Begitu di-tap:
+       1. baris kalimat "intro" diketik dulu (bikin penasaran),
+       2. lalu "jumpscare" muncul: layar berkedip + sedikit shake,
+          gif/foto kocak muncul dengan animasi pop, dan musik
+          kocak mulai diputar,
+       3. caption lucu diketik di bawah gambar.
+     Ganti image & music di bawah dengan file kocak kamu sendiri.
+  ---------------------------------------------------------- */
+  surprise: {
+    delayMs:     5000,                          // jeda (ms) sebelum tombol muncul setelah final letter ditutup
+    triggerDelayMs: 1700,                       // jeda antara intro selesai diketik & jumpscare muncul
+    introText:   "deyy ada satu hal yang mau aku sampaikan",
+    captionText: 'entah kenapa lagu ini selalu bikin aku inget satu kalimat "mau disuruh memilih berapa kali pun aku akan tetep pilih kamu"',
+    image:       'assets/images/surprise.gif',  // ganti dengan gif/foto kocak kamu
+    music:       'assets/music/surprise.mp3',   // ganti dengan lagu kocak/troll kamu
+  },
 
   /* ----------------------------------------------------------
      MEMORY WALL
@@ -352,10 +374,12 @@ Dan semoga kamu selalu menemukan alasan untuk tersenyum.
 const state = {
   hasOpenedLetter:   false,
   openedFriends:     loadOpenedFriends(),
-  currentAudioKey:   null,   // 'main' | 'friend' | 'final' | null
+  currentAudioKey:   null,   // 'main' | 'friend' | 'final' | 'surprise' | null
   isMuted:           false,
   volume:            0.6,
   activeFriendIndex: null,
+  hasShownEasterEgg: false,  // tombol "one last thing" sudah pernah dimunculkan?
+  easterEggTimer:    null,   // id setTimeout yang menunggu untuk memunculkan tombol
 };
 
 /* ================================================================
@@ -399,9 +423,24 @@ const finalModalClose     = $('#final-modal-close');
 const finalPhotoEl        = $('#final-photo');
 const finalLetterTextEl   = $('#final-letter-text');
 
-const audioMain    = $('#audio-main');
-const audioFriend  = $('#audio-friend');
-const audioFinal   = $('#audio-final');
+/* ---- Easter egg: "one last thing" surprise ---- */
+const easterEggBtn         = $('#easter-egg-btn');
+const surpriseModal        = $('#surprise-modal');
+const surpriseModalBackdrop = $('#surprise-modal-backdrop');
+const surpriseModalClose   = $('#surprise-modal-close');
+const surpriseStage        = $('#surprise-stage');
+const surpriseIntro        = $('#surprise-intro');
+const surpriseIntroText    = $('#surprise-intro-text');
+const surprisePop          = $('#surprise-pop');
+const surpriseFlash        = $('#surprise-flash');
+const surprisePopImage     = $('#surprise-pop-image');
+const surpriseImg          = $('#surprise-img');
+const surpriseCaption      = $('#surprise-caption');
+
+const audioMain     = $('#audio-main');
+const audioFriend   = $('#audio-friend');
+const audioFinal    = $('#audio-final');
+const audioSurprise = $('#audio-surprise');
 
 const musicPlayer    = $('#music-player');
 const musicToggleBtn = $('#music-toggle');
@@ -445,6 +484,11 @@ function applyConfigToDOM() {
   finalPhotoEl.src = CONFIG.finalLetter.photo;
   attachImageFallback(finalPhotoEl, CONFIG.finalLetter.photo.split('/').pop());
   finalLetterTextEl.dataset.fullText = CONFIG.finalLetter.message;
+
+  surpriseIntroText.dataset.fullText = CONFIG.surprise.introText;
+  surpriseCaption.dataset.fullText   = CONFIG.surprise.captionText;
+  surpriseImg.src = CONFIG.surprise.image;
+  attachImageFallback(surpriseImg, CONFIG.surprise.image.split('/').pop());
 
   const nameEls   = $all('.birthday-title__name');
   const datesEl   = $('.birthday-title__dates');
@@ -694,10 +738,15 @@ function setupEventListeners() {
   finalModalClose.addEventListener('click', closeFinalModal);
   finalModalBackdrop.addEventListener('click', closeFinalModal);
 
+  easterEggBtn.addEventListener('click', openSurpriseModal);
+  surpriseModalClose.addEventListener('click', closeSurpriseModal);
+  surpriseModalBackdrop.addEventListener('click', closeSurpriseModal);
+
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    if (friendModal.classList.contains('is-active')) closeFriendModal();
-    if (finalModal.classList.contains('is-active'))  closeFinalModal();
+    if (friendModal.classList.contains('is-active'))   closeFriendModal();
+    if (finalModal.classList.contains('is-active'))    closeFinalModal();
+    if (surpriseModal.classList.contains('is-active')) closeSurpriseModal();
   });
 }
 
@@ -908,6 +957,140 @@ function closeFinalModal() {
   if (finalLetterTimer) { clearTimeout(finalLetterTimer); finalLetterTimer = null; }
   resetFinalEnvelopeVisuals();
   fadeOut(audioFinal).then(() => { if (state.hasOpenedLetter) playMain(); });
+
+  // Easter egg: beberapa saat setelah final letter ditutup pertama kali,
+  // munculkan tombol kecil "one last thing..." di pojok layar.
+  scheduleEasterEgg();
+}
+
+/* ================================================================
+   EASTER EGG: "ONE LAST THING" SURPRISE
+   ================================================================ */
+function scheduleEasterEgg() {
+  if (state.hasShownEasterEgg || state.easterEggTimer) return;
+  state.easterEggTimer = setTimeout(() => {
+    state.easterEggTimer = null;
+    state.hasShownEasterEgg = true;
+    showEasterEggButton();
+  }, CONFIG.surprise.delayMs);
+}
+
+function showEasterEggButton() {
+  easterEggBtn.hidden = false;
+  requestAnimationFrame(() => easterEggBtn.classList.add('is-visible'));
+}
+
+function resetSurpriseStageVisuals() {
+  surprisePop.hidden = true;
+  surpriseIntro.hidden = false;
+  surpriseFlash.classList.remove('is-flashing');
+  surprisePopImage.classList.remove('is-popping');
+  surpriseStage.classList.remove('is-shaking');
+
+  if (typeof surpriseIntroText._cancelTypewriter === 'function') surpriseIntroText._cancelTypewriter();
+  surpriseIntroText.dataset.typed  = 'false';
+  surpriseIntroText.dataset.typing = 'false';
+
+  if (typeof surpriseCaption._cancelTypewriter === 'function') surpriseCaption._cancelTypewriter();
+  surpriseCaption.dataset.typed  = 'false';
+  surpriseCaption.dataset.typing = 'false';
+}
+
+let surpriseJumpscareTimer = null;
+let surpriseCaptionTimer   = null;
+
+function openSurpriseModal() {
+  if (surpriseJumpscareTimer) { clearTimeout(surpriseJumpscareTimer); surpriseJumpscareTimer = null; }
+  if (surpriseCaptionTimer)   { clearTimeout(surpriseCaptionTimer);   surpriseCaptionTimer   = null; }
+
+  resetSurpriseStageVisuals();
+  document.body.classList.add('modal-open');
+  surpriseModal.classList.add('is-active');
+  surpriseModal.setAttribute('aria-hidden', 'false');
+
+  typewrite(surpriseIntroText, CONFIG.surprise.introText, 38);
+
+  surpriseJumpscareTimer = setTimeout(() => {
+    surpriseJumpscareTimer = null;
+    triggerJumpscare();
+  }, CONFIG.surprise.triggerDelayMs);
+}
+
+function triggerJumpscare() {
+  if (!surpriseModal.classList.contains('is-active')) return;
+
+  surpriseIntro.hidden = true;
+  surprisePop.hidden    = false;
+
+  playStinger();
+  surpriseStage.classList.add('is-shaking');
+  surpriseFlash.classList.add('is-flashing');
+  surprisePopImage.classList.add('is-popping');
+  burstFromElement(surprisePopImage, { count: 24, symbols: ['😂', '🤣', '✨', '💥', '🎉'] });
+
+  setTimeout(() => surpriseStage.classList.remove('is-shaking'), 500);
+
+  fadeOut(audioMain);
+  fadeOut(audioFriend);
+  fadeOut(audioFinal);
+  playSurpriseAudio();
+
+  surpriseCaptionTimer = setTimeout(() => {
+    surpriseCaptionTimer = null;
+    typewrite(surpriseCaption, CONFIG.surprise.captionText, 30);
+  }, 400);
+}
+
+function closeSurpriseModal() {
+  if (!surpriseModal.classList.contains('is-active')) return;
+  if (surpriseJumpscareTimer) { clearTimeout(surpriseJumpscareTimer); surpriseJumpscareTimer = null; }
+  if (surpriseCaptionTimer)   { clearTimeout(surpriseCaptionTimer);   surpriseCaptionTimer   = null; }
+
+  surpriseModal.classList.remove('is-active');
+  surpriseModal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  resetSurpriseStageVisuals();
+
+  fadeOut(audioSurprise).then(() => { if (state.hasOpenedLetter) playMain(); });
+}
+
+/* A tiny synthesized "boop-boop-BWAA" stinger so the jumpscare has an
+   instant comedic punch even before assets/music/surprise.mp3 finishes
+   fading in. Pure Web Audio API — no extra audio file needed. */
+function playStinger() {
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = new Ctx();
+    const now = ctx.currentTime;
+
+    const notes = [
+      { freq: 220, start: 0,    dur: 0.09, type: 'square'   },
+      { freq: 330, start: 0.09, dur: 0.09, type: 'square'   },
+      { freq: 110, start: 0.18, dur: 0.5,  type: 'sawtooth' },
+    ];
+
+    notes.forEach((n) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = n.type;
+      osc.frequency.setValueAtTime(n.freq, now + n.start);
+      if (n.type === 'sawtooth') {
+        osc.frequency.exponentialRampToValueAtTime(n.freq * 1.8, now + n.start + n.dur);
+      }
+      gain.gain.setValueAtTime(0.0001, now + n.start);
+      gain.gain.exponentialRampToValueAtTime(0.25, now + n.start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + n.start + n.dur);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now + n.start);
+      osc.stop(now + n.start + n.dur + 0.02);
+    });
+
+    setTimeout(() => ctx.close(), 900);
+  } catch (e) {
+    // Web Audio unsupported / blocked by autoplay policy — the visual
+    // jumpscare still happens, we just skip the synth stinger.
+  }
 }
 
 /* ================================================================
@@ -1042,6 +1225,15 @@ function playFinalAudio() {
   bindAudioErrorNote(audioFinal, CONFIG.finalLetter.music);
 }
 
+function playSurpriseAudio() {
+  audioSurprise.src   = CONFIG.surprise.music;
+  audioSurprise.loop  = true;
+  state.currentAudioKey = 'surprise';
+  musicTrackName.textContent = 'One More Surprise 😈';
+  fadeIn(audioSurprise);
+  bindAudioErrorNote(audioSurprise, CONFIG.surprise.music);
+}
+
 function bindAudioErrorNote(audioEl, path) {
   audioEl.addEventListener('error', () => {
     musicTrackName.textContent = `Add music: ${path.split('/').pop()}`;
@@ -1049,9 +1241,10 @@ function bindAudioErrorNote(audioEl, path) {
 }
 
 function getCurrentAudio() {
-  if (state.currentAudioKey === 'main')   return audioMain;
-  if (state.currentAudioKey === 'friend') return audioFriend;
-  if (state.currentAudioKey === 'final')  return audioFinal;
+  if (state.currentAudioKey === 'main')     return audioMain;
+  if (state.currentAudioKey === 'friend')   return audioFriend;
+  if (state.currentAudioKey === 'final')    return audioFinal;
+  if (state.currentAudioKey === 'surprise') return audioSurprise;
   return null;
 }
 
@@ -1077,7 +1270,7 @@ function setupMusicPlayerUI() {
 
   musicMuteBtn.addEventListener('click', () => {
     state.isMuted = !state.isMuted;
-    [audioMain, audioFriend, audioFinal].forEach((a) => { a.muted = state.isMuted; });
+    [audioMain, audioFriend, audioFinal, audioSurprise].forEach((a) => { a.muted = state.isMuted; });
     musicMuteBtn.textContent = state.isMuted ? '🔈' : '🔊';
   });
 
@@ -1087,7 +1280,7 @@ function setupMusicPlayerUI() {
     if (audio) setVolumeImmediate(audio, state.volume);
   });
 
-  [audioMain, audioFriend, audioFinal].forEach((audio) => {
+  [audioMain, audioFriend, audioFinal, audioSurprise].forEach((audio) => {
     audio.addEventListener('play',  () => { musicPlayPause.textContent = '⏸'; });
     audio.addEventListener('pause', () => { musicPlayPause.textContent = '▶'; });
   });

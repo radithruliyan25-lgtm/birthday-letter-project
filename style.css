@@ -1123,3 +1123,169 @@ section {
 
 /* Prevent double bounce when body already has modal-open class */
 body.lightbox-open { overflow: hidden; }
+
+/* ============================================================
+   EASTER EGG: "ONE LAST THING" SURPRISE
+   ----------------------------------------------------------------
+   1) A small floating button fades/wiggles in a few seconds after
+      the final letter is closed.
+   2) Tapping it opens a modal: a suspenseful typed line first,
+      then a comedic "jumpscare" — flash + shake + bouncy pop image
+      + caption — while a goofy/troll track plays.
+   ============================================================ */
+
+/* ---- Floating teaser button ---- */
+.easter-egg-btn {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 380;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  padding: 12px 20px 12px 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--rose) 100%);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 16px 34px -14px rgba(75,63,78,0.45);
+  opacity: 0;
+  transform: translateY(16px) scale(0.85);
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-dream), transform 0.5s var(--ease-dream);
+}
+
+.easter-egg-btn.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  animation: egg-wiggle 2.8s ease-in-out infinite;
+}
+
+.easter-egg-btn:hover { transform: translateY(-3px) scale(1.04); }
+
+@keyframes egg-wiggle {
+  0%, 78%, 100% { transform: translateY(0) rotate(0deg); }
+  84% { transform: translateY(-4px) rotate(-4deg); }
+  90% { transform: translateY(0) rotate(4deg); }
+  95% { transform: translateY(-2px) rotate(-2deg); }
+}
+
+.easter-egg-btn__glow {
+  position: absolute;
+  inset: -10px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255,255,255,0.55), transparent 70%);
+  filter: blur(8px);
+  opacity: 0;
+  animation: egg-glow-pulse 2.8s ease-in-out infinite;
+}
+@keyframes egg-glow-pulse { 0%, 100% { opacity: 0; } 50% { opacity: 0.8; } }
+
+.easter-egg-btn__icon { font-size: 16px; position: relative; }
+.easter-egg-btn__label { position: relative; }
+
+@media (max-width: 640px) {
+  .easter-egg-btn { left: 12px; bottom: 12px; font-size: 12px; padding: 10px 16px 10px 14px; }
+}
+
+/* ---- Surprise modal stage ---- */
+.modal--surprise .modal__backdrop {
+  background: rgba(20, 14, 24, 0.72);
+}
+
+.modal__stage--surprise {
+  text-align: center;
+  overflow: hidden;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal__stage--surprise.is-shaking { animation: surprise-shake 0.5s ease-in-out; }
+
+@keyframes surprise-shake {
+  0%, 100% { transform: scale(1) translate(0, 0) rotate(0deg); }
+  10% { transform: scale(1) translate(-7px, 3px) rotate(-1deg); }
+  20% { transform: scale(1) translate(7px, -3px) rotate(1deg); }
+  30% { transform: scale(1) translate(-6px, 4px) rotate(-0.8deg); }
+  40% { transform: scale(1) translate(6px, -4px) rotate(0.8deg); }
+  50% { transform: scale(1) translate(-4px, 2px) rotate(-0.5deg); }
+  60% { transform: scale(1) translate(4px, -2px) rotate(0.5deg); }
+  70% { transform: scale(1) translate(-2px, 1px); }
+  80% { transform: scale(1) translate(2px, -1px); }
+  90% { transform: scale(1) translate(-1px, 0); }
+}
+
+/* ---- Stage 1: suspenseful intro line ---- */
+.surprise__intro { width: 100%; padding: 18px 6px; }
+
+.surprise__intro-text {
+  font-family: var(--font-script);
+  font-size: clamp(24px, 4vw, 30px);
+  color: var(--rose-deep);
+  min-height: 1.4em;
+  margin: 0;
+}
+
+/* ---- Stage 2: the jumpscare pop ---- */
+.surprise__pop {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 0 4px;
+}
+
+.surprise__pop-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, #fff 0%, var(--blush) 70%, var(--sky) 100%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.surprise__pop-flash.is-flashing { animation: surprise-flash 0.55s ease-out; }
+@keyframes surprise-flash {
+  0%   { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+.surprise__pop-image {
+  width: min(240px, 65vw);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 30px 60px -16px rgba(0,0,0,0.45);
+  transform: scale(0) rotate(-10deg);
+  background: linear-gradient(160deg, var(--blush-soft), var(--sky-soft));
+}
+.surprise__pop-image.is-popping { animation: surprise-pop-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+@keyframes surprise-pop-in {
+  0%   { transform: scale(0) rotate(-14deg); }
+  55%  { transform: scale(1.18) rotate(5deg); }
+  78%  { transform: scale(0.94) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.surprise__pop-image img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+
+.surprise__caption {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(18px, 3vw, 22px);
+  color: var(--ink);
+  min-height: 1.4em;
+  margin: 0;
+}

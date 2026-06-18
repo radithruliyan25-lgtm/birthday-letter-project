@@ -198,8 +198,40 @@
         <div class="polaroid polaroid--final">
           <img id="final-photo" src="assets/images/final-photo.jpg" alt="MAMASS RADITHH" />
         </div>
-        <p class="modal__final-label">🫧°🪼˖⋆🌊 From Me To You  🫧°🪼˖⋆🌊</p>
+        <p class="modal__final-label">🫧🪼🌊 From Me To You  🫧🪼🌊</p>
         <p id="final-letter-text" class="modal__message modal__message--final typewriter-target" data-full-text="If you've made it this far, that means you opened every secret and read every wish — and now it's just the two of us. Watching you grow into sixteen has been one of my favourite things. I've seen you laugh until you cried, cry until you laughed again, chase ridiculous ideas, and somehow make every room you walk into feel a little warmer. Sixteen is the beginning of a chapter where you get to decide more and more of who you become — and I already know it's going to be someone wonderful, because you already are. So happy sweet sixteen, Derly. May this year give you everything your sixteen-year-old heart is hoping for, and a few things you didn't even know to wish for. I'm so endlessly proud of you. Always in your corner."></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       EASTER EGG: "ONE LAST THING" SURPRISE
+       Auto-appears a few seconds after the final letter is closed.
+       Tapping it leads to a playful "jumpscare" surprise modal.
+       ============================================================ -->
+  <button id="easter-egg-btn" class="easter-egg-btn" aria-label="satu hal lagi der.." hidden>
+    <span class="easter-egg-btn__glow"></span>
+    <span class="easter-egg-btn__icon">🙏</span>
+    <span class="easter-egg-btn__label">satu hal lagi deyyy...</span>
+  </button>
+
+  <div id="surprise-modal" class="modal modal--surprise" aria-hidden="true">
+    <div class="modal__backdrop" id="surprise-modal-backdrop"></div>
+    <div class="modal__stage modal__stage--surprise" id="surprise-stage">
+      <button class="modal__close" id="surprise-modal-close" aria-label="Close surprise">✕</button>
+
+      <!-- Stage 1: typed line before the jumpscare -->
+      <div class="surprise__intro" id="surprise-intro">
+        <p id="surprise-intro-text" class="surprise__intro-text typewriter-target" data-full-text="wait... there's one more thing."></p>
+      </div>
+
+      <!-- Stage 2: the jumpscare pop + funny caption -->
+      <div class="surprise__pop" id="surprise-pop" hidden>
+        <div class="surprise__pop-flash" id="surprise-flash"></div>
+        <div class="surprise__pop-image" id="surprise-pop-image">
+          <img id="surprise-img" src="assets/images/surprise.gif" alt="surprise!" />
+        </div>
+        <p id="surprise-caption" class="surprise__caption typewriter-target" data-full-text="I still have one surprise!! 😈🎉"></p>
       </div>
     </div>
   </div>
@@ -230,6 +262,7 @@
   <audio id="audio-main" loop preload="none"></audio>
   <audio id="audio-friend" preload="none"></audio>
   <audio id="audio-final" preload="none"></audio>
+  <audio id="audio-surprise" loop preload="none"></audio>
 
   <script src="script.js"></script>
 </body>
