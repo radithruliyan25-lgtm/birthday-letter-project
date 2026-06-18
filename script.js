@@ -358,12 +358,12 @@ Dan semoga kamu selalu menemukan alasan untuk tersenyum.
      TIMELINE
   ---------------------------------------------------------- */
   timeline: [
-    { year: '2010', text: 'Born and brought happiness to the world.' },
-    { year: '2013', text: 'Learning and growing every day.' },
-    { year: '2016', text: 'A cheerful little adventurer.' },
-    { year: '2020', text: 'Creating memories and friendships.' },
-    { year: '2023', text: 'Growing stronger and wiser.' },
-    { year: '2026', text: 'Sweet Sixteen surrounded by memories, friendship, and endless possibilities ahead carrying every laugh, memory, and dream along the way becoming the wonderful person everyone loves today .' },
+    { year: '2010', text: 'Born on July 12th, 2010, a little girl began a journey that would slowly bring joy, laughter, and countless precious memories to the people around her. No one knew what the future would hold, but a beautiful story had just begun...' },
+    { year: '2013', text: 'The years of endless curiosity, innocent laughter, and discovering the world one small adventure at a time. Every day brought something new to learn, explore, and wonder about.' },
+    { year: '2016', text: 'A cheerful little adventurer with a growing heart and an even bigger imagination. These were the days of simple happiness, playful memories, and finding magic in the smallest moments.' },
+    { year: '2020', text: 'A year unlike any other. While the world changed around her, she continued growing, learning, and collecting experiences that would quietly shape the person she would become in the years ahead.' },
+    { year: '2023', text: 'The chapter of friendships, memories, lessons, and self-discovery. New people, new experiences, and new challenges all became part of the story, helping her grow stronger and wiser with each passing day.' },
+    { year: '2026', text: 'Sweet Sixteen. Sixteen years filled with laughter, dreams, friendships, lessons, and moments that can never be replaced. From a little girl born on a July morning to someone who has touched the lives of many people around her, this milestone is a celebration of every step taken along the way. The memories behind are precious, but the possibilities ahead are endless. May this new chapter bring happiness, success, unforgettable adventures, and all the beautiful things that a sixteen-year-old heart could ever hope for. Today isnt just about turning sixteen, its about celebrating the wonderful person you ve become and the amazing future waiting ahead. ✨🎂' },
   ],
 
 };
