@@ -189,6 +189,22 @@ With love and warm wishes,
       music:        'assets/music/friends/friend13.mp3',
       message:      'Happy birthday to someone who feels like home. Sixteen years of you in this world has made it so much better — I can\'t wait to see what this year brings you.',
     },
+    {
+      id:           14,
+      name:         'Firdan',
+      photo:        'assets/images/friends/friend14.jpg',
+      togetherPhoto: null,
+      music:        'assets/music/friends/friend14.mp3',
+      message:      'Happy birthday to someone who feels like home. Sixteen years of you in this world has made it so much better — I can\'t wait to see what this year brings you.',
+    },
+    {
+      id:           14,
+      name:         'Violaaa',
+      photo:        'assets/images/friends/friend15.jpg',
+      togetherPhoto: null,
+      music:        'assets/music/friends/friend15.mp3',
+      message:      'Happy birthday to someone who feels like home. Sixteen years of you in this world has made it so much better — I can\'t wait to see what this year brings you.',
+    },
   ],
 
   /* ----------------------------------------------------------
@@ -238,21 +254,21 @@ Mungkin masih kesal.
 
 Mungkin sudah tidak peduli.
 
-Atau mungkin aku hanya seseorang dari masa lalu yang sesekali teringat ketika tidak sengaja muncul di beranda.
+Atau mungkin aku hanya seseorang dari masa lalu yang sesekali teringat ketika tidak sengaja muncul di hidupmuuu...
 
-Dan jujur saja, aku tidak punya hak untuk menentukan bagaimana kamu harus melihatku.
+Dan jujur saja, aku tidak punya hak untuk menentukan bagaimana kamu harus melihatku sihh deyy
 
-Karena itu aku hanya ingin bertanya satu hal.
+Karena itu aku hanya ingin bertanya satu hal... satu hal penting..
 
 Apakah kita masih bisa berteman?
 
-Kalau jawabannya tidak, tidak apa-apa.
+Kalau jawabannya tidak, tidak apa-apa deyy...
 
-Sungguh kali ini aku tidak akan memaksa.
+Sungguh kali ini aku tidak akan memaksa apapun itu...
 
-Aku tidak akan memaksakan apa pun. Aku tidak akan marah. Aku tidak akan menyalahkanmu. Setelah semua yang terjadi, aku mengerti kalau setiap orang berhak menentukan siapa yang ingin mereka pertahankan dalam hidupnya.
+Aku tidak akan memaksakan apa pun. Aku tidak akan marah. Aku tidak akan menyalahkanmu. Setelah semua yang terjadi, aku mengerti kalau setiap orang berhak menentukan siapa yang ingin mereka pertahankan dalam hidupnya.....
 
-Tapi kalau jawabannya iya, aku akan sangat bersyukur.
+Tapi kalau jawabannya iya, aku akan sangat bersyukur....
 
 Bukan karena aku berharap semuanya kembali seperti dulu, melainkan karena aku masih menghargai keberadaanmu sebagai seseorang yang pernah memberi banyak warna dalam hidupku.
 
@@ -293,6 +309,7 @@ Dan semoga kamu selalu menemukan alasan untuk tersenyum.
 -MAMASS RADITTHEOKKK
 `,
   },
+  
 
   /* ----------------------------------------------------------
      MEMORY WALL
@@ -752,17 +769,21 @@ function revealFinalTeaser() {
   }, 900);
 }
 
+/* ----------------------------------------------------------------
+   PERSISTENCE (intentionally disabled)
+   ------------------------------------------------------------------
+   This site is designed to ALWAYS restart from a blank slate on every
+   refresh or new visit. No localStorage / sessionStorage / cookies are
+   used anywhere. loadOpenedFriends() always returns a fresh empty Set,
+   and saveOpenedFriends() is a deliberate no-op kept only so the rest
+   of the code (markFriendOpened, etc.) doesn't need to change.
+---------------------------------------------------------------- */
 function loadOpenedFriends() {
-  try {
-    const raw = localStorage.getItem('derly16-opened-friends');
-    return new Set(raw ? JSON.parse(raw) : []);
-  } catch (e) { return new Set(); }
+  return new Set();
 }
 
 function saveOpenedFriends(set) {
-  try {
-    localStorage.setItem('derly16-opened-friends', JSON.stringify(Array.from(set)));
-  } catch (e) { /* storage unavailable */ }
+  // no-op: progress is never persisted across page loads
 }
 
 /* ================================================================
