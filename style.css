@@ -829,9 +829,9 @@ section {
    ============================================================ */
 .music-player {
   position: fixed;
-  right: 18px; bottom: 18px;
+  left: 10px; top: 10px;
   z-index: 400;
-  display: flex; align-items: flex-end; gap: 10px;
+  display: flex; align-items: center; gap: 10px;
 }
 
 .music-player__toggle {
@@ -882,7 +882,7 @@ section {
   section { padding: 64px 18px; }
   .friends-grid { grid-template-columns: repeat(2, 1fr); }
   .memory-grid { grid-template-columns: repeat(3, 1fr); }
-  .music-player { right: 12px; bottom: 12px; }
+  .music-player { left: 8px; top: 8px; }
 }
 
 @media (max-width: 400px) {
@@ -1134,13 +1134,10 @@ body.lightbox-open { overflow: hidden; }
       + caption — while a goofy/troll track plays.
    ============================================================ */
 
-/* ---- Floating teaser button ---- */
+/* ---- Centered teaser button ---- */
 .easter-egg-btn {
-  position: fixed;
-  left: 18px;
-  bottom: 18px;
-  z-index: 380;
-  display: flex;
+  display: inline-flex;
+  position: relative;
   align-items: center;
   gap: 8px;
   border: none;
@@ -1157,6 +1154,7 @@ body.lightbox-open { overflow: hidden; }
   transform: translateY(16px) scale(0.85);
   pointer-events: none;
   transition: opacity 0.5s var(--ease-dream), transform 0.5s var(--ease-dream);
+  margin-top: 20px;
 }
 
 .easter-egg-btn.is-visible {
@@ -1190,7 +1188,7 @@ body.lightbox-open { overflow: hidden; }
 .easter-egg-btn__label { position: relative; }
 
 @media (max-width: 640px) {
-  .easter-egg-btn { left: 12px; bottom: 12px; font-size: 12px; padding: 10px 16px 10px 14px; }
+  .easter-egg-btn { font-size: 12px; padding: 10px 16px 10px 14px; }
 }
 
 /* ---- Surprise modal stage ---- */
